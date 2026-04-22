@@ -100,7 +100,7 @@ def prune_metadata(norm_fp, report_path, output_path):
         report_path=report_path,
         output_path=output_path,
         config=config,
-        verbose=True
+        verbose=False
     )
 
     print(f"Pruned metadata written to {output_path}")

@@ -37,6 +37,18 @@ def clean_cit_tables(input_dir, output_dir, use_lmdb=True):
 
     tmp_reports_dir = Path(tempfile.mkdtemp(prefix='tmp_reports', dir=output_dir))
     for table_fp in tables_fps:
+        # check if the file has only the header row
+        # in which case we can skip validation and just copy it to the output directory
+        with open(table_fp, 'r', encoding='utf-8') as f:
+            try:
+                first_lines = [next(f) for _ in range(2)]
+            except StopIteration:
+                first_lines = []
+            if len(first_lines) < 2:
+                print(f"{table_fp} has only header row, copying to output directory without validation.")
+                os.replace(table_fp, outdir_path / table_fp.name)
+                continue
+
         print(f"Validating {table_fp}...")
         
         # Validate the citations table
